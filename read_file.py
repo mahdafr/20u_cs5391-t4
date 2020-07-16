@@ -1,6 +1,7 @@
 import pandas as pd, numpy as np
 from os import path
 
+
 dataset = 'res/flow.2001-09-29.csv'
 cols = [4, 5, 6, 7, 10, 11, 15, 16, 17, 20, 21, 22, 23]             # the important columns to use
 dict = {'unix_secs': int,                                           # the dtype of each column
@@ -41,4 +42,4 @@ if __name__ == '__main__':
         np.save(out, data)
     else:                                                           # every other time
         data = np.load(out, allow_pickle=True)
-    print(f'1. The average packet size in this dataset is {np.sum(data[:, 1])/data.shape[0]:.2f}')
+    print(f'1. The average packet size in this dataset is {np.sum(data[:,1])/np.sum(data[:,0]):.2f}')

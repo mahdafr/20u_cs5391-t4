@@ -34,8 +34,8 @@ The important fields in the Netflow data are:
 
 ## Now using the dataset, answer the following questions.
 1. What is the average packet size, across all traffic in the trace? Describe how you computed this number.
-    - The average packet size can be calculated by the dividing the total amount of bytes (`data[1]`) by the total number of packets (`data.shape[0]`) in the trace (or rows, in `data`).
-    - This value was calculated to be `3411.16` bytes
+    - The average packet size can be calculated by the dividing the total amount of bytes (`sum(data[:][1])`) for all packets (or, the sum of `data`'s column 2) by the total number of packets (`sum(data[:][0])`) in the trace.
+    - This value was calculated to be `768.18` bytes
 2. Plot the Complementary Cumulative Probability Distribution (CCDF) of flow durations (i.e., the finish time minus the start time) and of flow sizes (i.e., number of bytes, and number of packets).
     - First plot each graph with a linear scale on each axis, and then a second time with a logarithmic scale on each axis.
     - What are the main features of the graphs?
@@ -43,6 +43,9 @@ The important fields in the Netflow data are:
     - Why is it useful to plot on a logarithmic scale?
 3. Summarize the traffic by which TCP/UDP port numbers are used.
     - Create two tables, listing the top-ten port numbers by __sender traffic volume__ (i.e., by source port number) and by __receiver traffic volume__ (i.e., by destination port number), including the percentage of traffic (by bytes) they contribute.
+        - The two tables are available as a screenshot of `ports.py` output, found in `tables.png`
+        - The results were computed through the use of the [NumPy library's](https://numpy.org/doc/stable/reference/generated/numpy.unique.html) `unique()` method, which returned a list of all values that appeared in a list, and the frequency of their appearance
+        - I also used the [NumPy library's](https://numpy.org/doc/stable/reference/generated/numpy.argsort.html) `argsort()` method to figure the top 10 most frequently used ports for `src` and `dst` traffic
     - Where possible, explain what applications are likely be responsible for this traffic. (_See the IANA port numbers reference for details_)
     - Explain any significant differences between the results for __sender vs. receiver__ port numbers.
 4. Aggregate the traffic volumes based on the source IP prefix.
