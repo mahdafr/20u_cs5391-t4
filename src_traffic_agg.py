@@ -10,11 +10,12 @@ if __name__ == '__main__':
             's_as': dataset[:, 11],
             'd_as': dataset[:, 12]}
 
-    b = data['bytes']
-    uniq, pos, counts = np.unique(b, return_index=True, return_counts=True)
-    sorted = np.argsort(counts*-1)                                  # sort in descending order
-    top10 = pos[sorted[:10]]                                        # the top 10 ports
-
     # need to get top 1% of s_ip of most trafficked bytes
+    s_ip = data['s_as']
+    uniq, pos, counts = np.unique(s_ip, return_index=True, return_counts=True)
+    srtd = np.argsort(counts*-1)
+    top10 = uniq[srtd[:10]]                                         # top 10 s_ip prefixes
+    bites = data['bytes']
 
-    print(f'Top 10 SRC IP Prefixes: {b[top10]}')
+    print(f'Top 10 SRC IP Prefixes:\t\t\t\t{top10}')
+    print(f'Total bytes used by these prefixes:\t{top10}')

@@ -47,7 +47,24 @@ The important fields in the Netflow data are:
         - The results were computed through the use of the [NumPy library's](https://numpy.org/doc/stable/reference/generated/numpy.unique.html) `unique()` method, which returned a list of all values that appeared in a list, and the frequency of their appearance
         - I also used the [NumPy library's](https://numpy.org/doc/stable/reference/generated/numpy.argsort.html) `argsort()` method to figure the top 10 most frequently used ports for `src` and `dst` traffic
     - Where possible, explain what applications are likely be responsible for this traffic. (_See the IANA port numbers reference for details_)
+        - For the `src` ports:
+            - Port 80 was used most frequently. It is dedicated to HTTP traffic, therefore it is expected to be the most used. It also makes sense the port dedicated to HTTPS (TLS/SSL encrypted) traffic is the second most frequently used port (port 443).
+            - Port 0 was also used, [though it shouldn't be](https://www.speedguide.net/port.php?port=0), frequently; it is used for socket binding to determine ports to use for the connections
+            - Port 53 is used by the DNS to translate domain names to IP addresses
+            - Port 25 is used for SMTP (mail routing)
+            - Port 22 is used for SSH logins and file transfers
+            - Port 1935 is used for Adobe Flash communications
+            - Port 3074 is used for Xbox Live and Windows games
+            - Port 3389 is used by Microsoft for remote desktop connections
+            - Port 2128 is reserved by Net Steward Control _need more looking into_
+        - For the `dst` ports:
+            - Much of the same in the Top 10 of `src` ports appeared in this table, as expected.
+            - Port 445 is used for direct TCP networking access, making it vulnerable to threats
+            - Port 123 is used for time synchronization, also making it vulnerable to threats
+            - Port 2048 is reserved by a DLS-monitor _need more looking into_
     - Explain any significant differences between the results for __sender vs. receiver__ port numbers.
+        - As expected, there are similar `src` and `dst` ports used in the dataset
+        - However, the major differences can be found in that the most commonly used `dst` ports are also most vulnerable to threats.
 4. Aggregate the traffic volumes based on the source IP prefix.
     - What fraction of the total traffic comes from the most popular (by number of bytes) 0.1% of source IP prefixes?
     - The most popular 1% of source IP prefixes?
