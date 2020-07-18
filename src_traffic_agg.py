@@ -2,6 +2,30 @@ import numpy as np
 
 f_data = 'res/data.npy'
 
+
+def get_top(ip_addr, bites):
+    uniq = np.unique(ip_addr)                                       # a list of every s_ip addr that appears
+    size = []
+    for ip in uniq:
+        b = np.where(ip_addr == ip)[0]                              # get all occurrences of each s_ip addr
+        size.append(np.sum(bites[b]))                               # sum up each s_ip addr's byte flow
+    size = np.array(size)
+    srtd = np.argsort(size*-1)
+    return uniq[srtd], size[srtd]
+
+
+def get_top_percent(data, bites, percent, tot_bites):
+    j = 0
+    sum = 0
+    print('want', tot_bites*percent)
+    while sum <= tot_bites*percent:                       # accumulate the byte flow up to this percent
+        sum += bites[j]
+        j += 1                                            # move to next unique s_ip addr
+        print('sum', sum, j)
+    print(f'Top {percent}% of SRC IP Prefixes used:\t{sum} bytes, from addresses:\t{data[:j-1]}')
+    print(f'This used up only {sum/tot_bites:.2}% of the total bytes in the dataset.')
+
+
 if __name__ == '__main__':
     dataset = np.load(f_data, allow_pickle=True)
     data = {'bytes': dataset[:, 1],
@@ -10,12 +34,9 @@ if __name__ == '__main__':
             's_as': dataset[:, 11],
             'd_as': dataset[:, 12]}
 
-    # need to get top 1% of s_ip of most trafficked bytes
-    s_ip = data['s_as']
-    uniq, pos, counts = np.unique(s_ip, return_index=True, return_counts=True)
-    srtd = np.argsort(counts*-1)
-    top10 = uniq[srtd[:10]]                                         # top 10 s_ip prefixes
-    bites = data['bytes']
+    bites = data['bytes']                                           # total bytes exchanged in this dataset
+    tot_bites = np.sum(bites)
 
-    print(f'Top 10 SRC IP Prefixes:\t\t\t\t{top10}')
-    print(f'Total bytes used by these prefixes:\t{top10}')
+    s_ip, s_bytes = get_top(data['s_as'], bites)                    # list of src IPs and their byte size
+    for percent in [0.1, 1, 10]:
+        get_top_percent(s_ip, s_bytes, percent, tot_bites)          # 0.1%, 1%, 10%
