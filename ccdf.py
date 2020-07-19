@@ -30,7 +30,7 @@ if __name__ == '__main__':
     color = ['--r', '--g', '--b']
 
     # linear graphs
-    lin_out = ['res/lin-p_duration', 'res/lin-p_bytes', 'res/lin-p_pkts', 'res/lin-all']
+    lin_out = ['res/p2-linear/p_duration', 'res/p2-linear/p_bytes', 'res/p2-linear/p_pkts', 'res/p2-linear/all']
     p_duration = np.cumsum(names['duration'])/np.sum(names['duration'])
     plot(p_duration, color[0], 'Duration (ms)', lin_out[0])
     p_bytes = np.cumsum(names['n_byte'])/np.sum(names['n_byte'])    # flow size: number of bytes (doctets)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     plot_all([p_duration, p_bytes, p_pkts], color, lin_out[3])
 
     # logarithmic graphs
-    log_out = ['res/log-p_duration', 'res/log-p_bytes', 'res/log-p_pkts', 'res/log-all']
+    log_out = ['res/p2-logarithmic/p_duration', 'res/p2-logarithmic/p_bytes', 'res/p2-logarithmic/p_pkts', 'res/p2-logarithmic/all']
     n_dur = np.log(names['duration'].astype(np.float))              # duration
     p_duration = np.cumsum(n_dur)/np.sum(n_dur)
     plot(p_duration, color[0], 'Duration (ms)', log_out[0])

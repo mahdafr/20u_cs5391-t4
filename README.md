@@ -38,12 +38,13 @@ The important fields in the Netflow data are:
     - This value was calculated to be `768.18` bytes
 2. Plot the Complementary Cumulative Probability Distribution (CCDF) of flow durations (i.e., the finish time minus the start time) and of flow sizes (i.e., number of bytes, and number of packets).
     - First plot each graph with a linear scale on each axis, and then a second time with a logarithmic scale on each axis.
+        - The program outputs are saved in the `res` directory, in `p2-linear/` and `p2-logarithmic/` folders. There are separate graphs and a combined graph included in their respective directories.
     - What are the main features of the graphs?
     - What artifacts of Netflow and of network protocols could be responsible for these features?
     - Why is it useful to plot on a logarithmic scale?
 3. Summarize the traffic by which TCP/UDP port numbers are used.
     - Create two tables, listing the top-ten port numbers by __sender traffic volume__ (i.e., by source port number) and by __receiver traffic volume__ (i.e., by destination port number), including the percentage of traffic (by bytes) they contribute.
-        - The two tables are available as a screenshot of `ports.py` output, found in `tables.png`
+        - The two tables are available as a screenshot of `ports.py` output, found in `3tables.png`
         - The results were computed through the use of the [NumPy library's](https://numpy.org/doc/stable/reference/generated/numpy.unique.html) `unique()` method, which returned a list of all values that appeared in a list, and the frequency of their appearance
         - I also used the [NumPy library's](https://numpy.org/doc/stable/reference/generated/numpy.argsort.html) `argsort()` method to figure the top 10 most frequently used ports for `src` and `dst` traffic
     - Where possible, explain what applications are likely be responsible for this traffic. (_See the IANA port numbers reference for details_)
@@ -66,8 +67,17 @@ The important fields in the Netflow data are:
         - As expected, there are similar `src` and `dst` ports used in the dataset
         - However, the major differences can be found in that the most commonly used `dst` ports are also most vulnerable to threats.
 4. Aggregate the traffic volumes based on the source IP prefix.
+    - _The results of this section can be found in `res/4agg-all_masks.png` and `res/4agg-filtered.png`_
     - What fraction of the total traffic comes from the most popular (by number of bytes) 0.1% of source IP prefixes?
+        - 1.315e6 KB (or, 1.254 GB) of data were sent from source IP prefix `0`. This was only 0.45% of the total bytes in the dataset.
     - The most popular 1% of source IP prefixes?
+        - 1.705e6 KB (or, 1.626 GB) of data were sent from source IP prefixes `0, 22742, 1249, 111, 3, 557, 11, 40127, 6932, 25691, 22834`. This was only 0.59% of the total bytes in the dataset.
     - The most popular 10% of source IP prefixes?
+        - 2.614e6 KB (or, 2.493 GB) of data were sent from source IP prefixes from above and many more (see output). This was only 0.9% of the total bytes in the dataset.
     - Some flows will have a source mask length of 0. Report the fraction of traffic (by bytes) that has a source mask of 0, and then exclude this traffic from the rest of the analysis. That is, report the top 0.1%, 1%, and 10% of source prefixes that have positive mask lengths.
+        - The traffic of the bytes that has a source mask length of `0` is 1.3e6 KB (or 1.24 GB). This comprised 0.43% of the total amount of bytes transferred.
+        - The results for those packets sent from source IP prefixes whose mask length is greater than 0 now change to the following:
+            - the 0.1% most popular source IP prefixes: 1.141e5 KB (or ), only 0.039% of the total byte flow, from source IP prefixes `22742`.
+            - the 1% most popular source IP prefixes: 4.877e5 KB (or ), only 0.17% of the total byte flow, from source IP prefixes `22742, 1249, 111, 3, 557, 11, 40127, 6932, 25691, 22834, 1351`.
+            - the 10% most popular source IP prefixes: 1.355e6 KB (or ), only 0.47% of the total byte flow, from those above and many more (see output in `res/4agg-filtered.png`).
 5. Assume an Organization A (Org-A) has the 128.112.0.0/16 address block. What fraction of the traffic (by bytes and by packets) in the trace is sent by Org-A? To Org-A?
