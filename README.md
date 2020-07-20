@@ -81,3 +81,14 @@ The important fields in the Netflow data are:
             - the 1% most popular source IP prefixes: 4.877e5 KB (or ), only 0.17% of the total byte flow, from source IP prefixes `22742, 1249, 111, 3, 557, 11, 40127, 6932, 25691, 22834, 1351`.
             - the 10% most popular source IP prefixes: 1.355e6 KB (or ), only 0.47% of the total byte flow, from those above and many more (see output in `res/4agg-filtered.png`).
 5. Assume an Organization A (Org-A) has the 128.112.0.0/16 address block. What fraction of the traffic (by bytes and by packets) in the trace is sent by Org-A? To Org-A?
+    - The script `p5_traffic.py` calculates this throughout this current trace.
+        - First, we find the number of occurrences the `128.112` appears in the dataset as either a source or destination IP address. We use this substring because the `16` of the address means we have 16 bits dedicated to the address block. This was done using the [NumPy library](https://numpy.org/devdocs/reference/generated/numpy.char.find.html).
+        - Then we calculate the number of bytes and packets sent to and from this IP address block.
+    - The values found are presented in this table. The output is also stored in `res/5traffic.png`
+    
+        |             | Bytes (MB) | Packets |
+        |-------------|------------|---------|
+        | Source      | 19.9       | 39352   |
+        | Destination | 62.3       | 56974   |
+        | Total       | 82.2       | 96326   |
+        | Fraction    | 0.0289%    | 0.0248% |
