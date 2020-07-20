@@ -95,14 +95,15 @@ The important fields in the Netflow data are:
         - However, the major differences can be found in that the most commonly used `dst` ports are also most vulnerable to threats.
 4. Aggregate the traffic volumes based on the source IP prefix.
     - _The results of this section can be found in `res/4agg-all_masks.png` and `res/4agg-filtered.png`_
-    - What fraction of the total traffic comes from the most popular (by number of bytes) 0.1% of source IP prefixes?
-        - 1.315e6 KB (or, 1.254 GB) of data were sent from source IP prefix `0`. This was only 0.45% of the total bytes in the dataset.
-    - The most popular 1% of source IP prefixes?
-        - 1.705e6 KB (or, 1.626 GB) of data were sent from source IP prefixes `0, 22742, 1249, 111, 3, 557, 11, 40127, 6932, 25691, 22834`. This was only 0.59% of the total bytes in the dataset.
-    - The most popular 10% of source IP prefixes?
-        - 2.614e6 KB (or, 2.493 GB) of data were sent from source IP prefixes from above and many more (see output). This was only 0.9% of the total bytes in the dataset.
+    - What fraction of the total traffic comes from the most popular (by number of bytes) 0.1% of source IP prefixes? the most popular 1% of source IP prefixes? the most popular 10% of source IP prefixes?
+
+        |      | Data Flow (GB) | Percentage of Total | Source IP Prefixes                                         |
+        |------|----------------|---------------------|------------------------------------------------------------|
+        | 0.1% | 1.254          | 0.45%               | 0                                                          |
+        | 1%   | 1.626          | 0.59%               | 0, 22742, 1249, 111, 3, 557, 11, 40127, 6932, 25691, 22834 |
+        | 10%  | 2.493          | 0.9%                | see program output in res/4agg-all_masks.png               |
     - Some flows will have a source mask length of 0. Report the fraction of traffic (by bytes) that has a source mask of 0, and then exclude this traffic from the rest of the analysis. That is, report the top 0.1%, 1%, and 10% of source prefixes that have positive mask lengths.
-        - The traffic of the bytes that has a source mask length of `0` is 1.3e6 KB (or 1.24 GB). This comprised 0.43% of the total amount of bytes transferred.
+        - The traffic of the bytes that have a source mask length of `0` is 1.3e6 KB (or 1.24 GB). This comprised 0.43% of the total amount of bytes transferred.
         - The results for those packets sent from source IP prefixes whose mask length is greater than 0 now change to the following values:
         
             |      | Data Flow (GB) | Percentage of Total | Source IP Address Prefixes                                    |
