@@ -38,7 +38,8 @@ The important fields in the Netflow data are:
     - This value was calculated to be `768.18` bytes
 2. Plot the Complementary Cumulative Probability Distribution (CCDF) of flow durations (i.e., the finish time minus the start time) and of flow sizes (i.e., number of bytes, and number of packets).
     - First plot each graph with a linear scale on each axis, and then a second time with a logarithmic scale on each axis.
-        - The program outputs are saved in the `res` directory, in `p2-linear/` and `p2-logarithmic/` folders. There are separate graphs and a combined graph included in their respective directories.
+        - The program outputs are saved in the `res` directory, in `p2-linear/` and `p2-logarithmic/` folders.
+        - There are separate graphs and a combined graph included in their respective directories.
     - What are the main features of the graphs?
     - What artifacts of Netflow and of network protocols could be responsible for these features?
     - Why is it useful to plot on a logarithmic scale?
@@ -47,6 +48,32 @@ The important fields in the Netflow data are:
         - The two tables are available as a screenshot of `ports.py` output, found in `3tables.png`
         - The results were computed through the use of the [NumPy library's](https://numpy.org/doc/stable/reference/generated/numpy.unique.html) `unique()` method, which returned a list of all values that appeared in a list, and the frequency of their appearance
         - I also used the [NumPy library's](https://numpy.org/doc/stable/reference/generated/numpy.argsort.html) `argsort()` method to figure the top 10 most frequently used ports for `src` and `dst` traffic
+
+            | SRC Port | Frequency | Percentage of Traffic |
+            |----------|-----------|-----------------------|
+            | 80       | 175117    | 0.4394%               |
+            | 443      | 19605     | 0.0173%               |
+            | 53       | 12927     | 0.0013%               |
+            | 0        | 9176      | 0.0064%               |
+            | 25       | 5698      | 0.0002%               |
+            | 22       | 5408      | 0.0217%               |
+            | 1935     | 4285      | 0.0366%               |
+            | 3074     | 3884      | 0.0008%               |
+            | 3389     | 3202      | 0.0009%               |
+            | 2128     | 2293      | 0.0011%               |
+
+            | DST Port | Frequency | Percentage of Traffic |
+            |----------|-----------|-----------------------|
+            | 80       | 319929    | 0.0293%               |
+            | 443      | 34727     | 0.0077%               |
+            | 53       | 17006     | 0.0005%               |
+            | 445      | 11620     | 0.0002%               |
+            | 25       | 8902      | 0.0035%               |
+            | 123      | 8378      | 0.0003%               |
+            | 1935     | 7933      | 0.0017%               |
+            | 3074     | 6365      | 0.0011%               |
+            | 2048     | 3410      | 0.0002%               |
+            | 0        | 2965      | 0.0061%               |
     - Where possible, explain what applications are likely be responsible for this traffic. (_See the IANA port numbers reference for details_)
         - For the `src` ports:
             - Port 80 was used most frequently. It is dedicated to HTTP traffic, therefore it is expected to be the most used. It also makes sense the port dedicated to HTTPS (TLS/SSL encrypted) traffic is the second most frequently used port (port 443).
@@ -76,15 +103,18 @@ The important fields in the Netflow data are:
         - 2.614e6 KB (or, 2.493 GB) of data were sent from source IP prefixes from above and many more (see output). This was only 0.9% of the total bytes in the dataset.
     - Some flows will have a source mask length of 0. Report the fraction of traffic (by bytes) that has a source mask of 0, and then exclude this traffic from the rest of the analysis. That is, report the top 0.1%, 1%, and 10% of source prefixes that have positive mask lengths.
         - The traffic of the bytes that has a source mask length of `0` is 1.3e6 KB (or 1.24 GB). This comprised 0.43% of the total amount of bytes transferred.
-        - The results for those packets sent from source IP prefixes whose mask length is greater than 0 now change to the following:
-            - the 0.1% most popular source IP prefixes: 1.141e5 KB (or ), only 0.039% of the total byte flow, from source IP prefixes `22742`.
-            - the 1% most popular source IP prefixes: 4.877e5 KB (or ), only 0.17% of the total byte flow, from source IP prefixes `22742, 1249, 111, 3, 557, 11, 40127, 6932, 25691, 22834, 1351`.
-            - the 10% most popular source IP prefixes: 1.355e6 KB (or ), only 0.47% of the total byte flow, from those above and many more (see output in `res/4agg-filtered.png`).
+        - The results for those packets sent from source IP prefixes whose mask length is greater than 0 now change to the following values:
+        
+            |      | Data Flow (GB) | Percentage of Total | Source IP Address Prefixes                                    |
+            |------|----------------|---------------------|---------------------------------------------------------------|
+            | 0.1% | 0.1088         | 0.039%              | 22742                                                         |
+            | 1%   | 0.4651         | 0.17%               | 22742, 1249, 111, 3, 557, 11, 40127, 6932, 25691, 22834, 1351 |
+            | 10%  | 1.292          | 0.47%               | see program output in `res/4agg-filtered.png`                 |
 5. Assume an Organization A (Org-A) has the 128.112.0.0/16 address block. What fraction of the traffic (by bytes and by packets) in the trace is sent by Org-A? To Org-A?
     - The script `p5_traffic.py` calculates this throughout this current trace.
-        - First, we find the number of occurrences the `128.112` appears in the dataset as either a source or destination IP address. We use this substring because the `16` of the address means we have 16 bits dedicated to the address block. This was done using the [NumPy library](https://numpy.org/devdocs/reference/generated/numpy.char.find.html).
+        - First, we find the number of occurrences the `128.112` appears in the dataset as either a source or destination IP address. We use this substring because the `16` of the address means we have 16 bits dedicated to the address block. This was done using the [NumPy library's](https://numpy.org/devdocs/reference/generated/numpy.char.find.html) `char.find` method.
         - Then we calculate the number of bytes and packets sent to and from this IP address block.
-    - The values found are presented in this table. The output is also stored in `res/5traffic.png`
+    - The values found are presented in this table. The output of the program is also reported in `res/5traffic.png`
     
         |             | Bytes (MB) | Packets |
         |-------------|------------|---------|

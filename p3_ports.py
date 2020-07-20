@@ -21,6 +21,6 @@ if __name__ == "__main__":
     data = np.load(f_data, allow_pickle=True)
     ports = {names[0]: data[:, 6],
              names[1]: data[:, 7],
-             'byt': data[:, 1]}
+             'byt': data[:, 1]/1024}                                # in kilobytes
     build_table(ports[names[0]], ports['byt'], names[0])
     build_table(ports[names[1]], ports['byt'], names[1])
