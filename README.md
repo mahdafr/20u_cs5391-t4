@@ -34,18 +34,19 @@ The important fields in the Netflow data are:
 
 ## Now using the dataset, answer the following questions.
 1. What is the average packet size, across all traffic in the trace? Describe how you computed this number.
+    - The `p1_read_file.py` script calculates this result as reported below.
     - The average packet size can be calculated by the dividing the total amount of bytes (`sum(data[:][1])`) for all packets (or, the sum of `data`'s column 2) by the total number of packets (`sum(data[:][0])`) in the trace.
     - This value was calculated to be `768.18` bytes
 2. Plot the Complementary Cumulative Probability Distribution (CCDF) of flow durations (i.e., the finish time minus the start time) and of flow sizes (i.e., number of bytes, and number of packets).
+    - _The `p2_ccdf.py` script outputs are saved in the `res` directory, in `p2-linear/` and `p2-logarithmic/` folders._
     - First plot each graph with a linear scale on each axis, and then a second time with a logarithmic scale on each axis.
-        - The program outputs are saved in the `res` directory, in `p2-linear/` and `p2-logarithmic/` folders.
-        - There are separate graphs and a combined graph included in their respective directories.
+        - The [Python matplotlib library](https://matplotlib.org/3.1.1/gallery/statistics/histogram_cumulative.html) can plot the CCDF using histograms (it really plots the CDF but plotting the CCDF)
     - What are the main features of the graphs?
     - What artifacts of Netflow and of network protocols could be responsible for these features?
     - Why is it useful to plot on a logarithmic scale?
 3. Summarize the traffic by which TCP/UDP port numbers are used.
+    - _The two tables are available as a screenshot of `p3_ports.py` output, found in `res/3tables.png`_
     - Create two tables, listing the top-ten port numbers by __sender traffic volume__ (i.e., by source port number) and by __receiver traffic volume__ (i.e., by destination port number), including the percentage of traffic (by bytes) they contribute.
-        - The two tables are available as a screenshot of `ports.py` output, found in `3tables.png`
         - The results were computed through the use of the [NumPy library's](https://numpy.org/doc/stable/reference/generated/numpy.unique.html) `unique()` method, which returned a list of all values that appeared in a list, and the frequency of their appearance
         - I also used the [NumPy library's](https://numpy.org/doc/stable/reference/generated/numpy.argsort.html) `argsort()` method to figure the top 10 most frequently used ports for `src` and `dst` traffic
 
@@ -77,7 +78,7 @@ The important fields in the Netflow data are:
     - Where possible, explain what applications are likely be responsible for this traffic. (_See the IANA port numbers reference for details_)
         - For the `src` ports:
             - Port 80 was used most frequently. It is dedicated to HTTP traffic, therefore it is expected to be the most used. It also makes sense the port dedicated to HTTPS (TLS/SSL encrypted) traffic is the second most frequently used port (port 443).
-            - Port 0 was also used, [though it shouldn't be](https://www.speedguide.net/port.php?port=0), frequently; it is used for socket binding to determine ports to use for the connections
+            - Port 0 was also used, [though it shouldn't be according to this source](https://www.speedguide.net/port.php?port=0), frequently; it is used for socket binding to determine ports to use for the connections
             - Port 53 is used by the DNS to translate domain names to IP addresses
             - Port 25 is used for SMTP (mail routing)
             - Port 22 is used for SSH logins and file transfers
@@ -94,7 +95,7 @@ The important fields in the Netflow data are:
         - As expected, there are similar `src` and `dst` ports used in the dataset
         - However, the major differences can be found in that the most commonly used `dst` ports are also most vulnerable to threats.
 4. Aggregate the traffic volumes based on the source IP prefix.
-    - _The results of this section can be found in `res/4agg-all_masks.png` and `res/4agg-filtered.png`_
+    - _The results of the `p4_src_traffic_agg.py` script can be found in `res/4agg-all_masks.png` and `res/4agg-filtered.png`_
     - What fraction of the total traffic comes from the most popular (by number of bytes) 0.1% of source IP prefixes? the most popular 1% of source IP prefixes? the most popular 10% of source IP prefixes?
 
         |      | Data Flow (GB) | Percentage of Total | Source IP Prefixes                                         |
@@ -112,7 +113,7 @@ The important fields in the Netflow data are:
             | 1%   | 0.4651         | 0.17%               | 22742, 1249, 111, 3, 557, 11, 40127, 6932, 25691, 22834, 1351 |
             | 10%  | 1.292          | 0.47%               | see program output in `res/4agg-filtered.png`                 |
 5. Assume an Organization A (Org-A) has the 128.112.0.0/16 address block. What fraction of the traffic (by bytes and by packets) in the trace is sent by Org-A? To Org-A?
-    - The script `p5_traffic.py` calculates this throughout this current trace.
+    - _The script `p5_traffic.py` calculates this throughout the current trace._
         - First, we find the number of occurrences the `128.112` appears in the dataset as either a source or destination IP address. We use this substring because the `16` of the address means we have 16 bits dedicated to the address block. This was done using the [NumPy library's](https://numpy.org/devdocs/reference/generated/numpy.char.find.html) `char.find` method.
         - Then we calculate the number of bytes and packets sent to and from this IP address block.
     - The values found are presented in this table. The output of the program is also reported in `res/5traffic.png`
