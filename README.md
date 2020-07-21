@@ -34,16 +34,26 @@ The important fields in the Netflow data are:
 
 ## Now using the dataset, answer the following questions.
 1. What is the average packet size, across all traffic in the trace? Describe how you computed this number.
-    - The `p1_read_file.py` script calculates this result as reported below.
+    - _The `p1_read_file.py` script calculates this result as reported below._
     - The average packet size can be calculated by the dividing the total amount of bytes (`sum(data[:][1])`) for all packets (or, the sum of `data`'s column 2) by the total number of packets (`sum(data[:][0])`) in the trace.
     - This value was calculated to be `768.18` bytes
 2. Plot the Complementary Cumulative Probability Distribution (CCDF) of flow durations (i.e., the finish time minus the start time) and of flow sizes (i.e., number of bytes, and number of packets).
     - _The `p2_ccdf.py` script outputs are saved in the `res` directory, in `p2-linear/` and `p2-logarithmic/` folders._
     - First plot each graph with a linear scale on each axis, and then a second time with a logarithmic scale on each axis.
-        - The [Python matplotlib library](https://matplotlib.org/3.1.1/gallery/statistics/histogram_cumulative.html) can plot the CCDF using histograms (it really plots the CDF but plotting the CCDF)
+        - The [Python matplotlib library](https://matplotlib.org/3.1.1/gallery/statistics/histogram_cumulative.html) `hist()` method can plot the CCDF using histograms (it really plots the CDF but plotting the CCDF is a passable parameter, `cumulative`)
+        - To change the scales to logarithmic values, we also use a boolean parameter, `logarithmic`
     - What are the main features of the graphs?
+        - The flow sizes in terms of bytes and packets are similarly produced graphs. Both drop after ~1000KB or ~500 packets, showing that the probability of finding these values is greatest when the as `x` decreases.
+        - The probability of finding durations longer than 5000ms decreases as the size increases after this significant drop.
+        - The log-graphs actually show better curvatures instead of drops.
     - What artifacts of Netflow and of network protocols could be responsible for these features?
+        - As expected, network protocols send small amounts of information (therefore, it is more probable that smaller packets will be sent and smaller data sizes are sent in each trace).
+        - There is, however, some data loss as those packets that were dropped, and given that NetFlow aggregates packets into single records, these records would not be stored and therefore the trace may not represent true network flow.
+        - This data reporting can also vary depending on the sampling rate (where most of the data is estimated, but some are true representations)
+        - This might explain why so many records are reduced in packet/flow size (only very few records with larger values are caught in this trace), as there is also more overhead to keeping exact records.
     - Why is it useful to plot on a logarithmic scale?
+        - The 'curvature' of the line provides more information rather than displaying drops in probabilities after different sizes.
+        - In fact, the flow size in packets and bytes show probabilities for values up to 10000 packets and 13500KB.
 3. Summarize the traffic by which TCP/UDP port numbers are used.
     - _The two tables are available as a screenshot of `p3_ports.py` output, found in `res/3tables.png`_
     - Create two tables, listing the top-ten port numbers by __sender traffic volume__ (i.e., by source port number) and by __receiver traffic volume__ (i.e., by destination port number), including the percentage of traffic (by bytes) they contribute.
@@ -85,12 +95,12 @@ The important fields in the Netflow data are:
             - Port 1935 is used for Adobe Flash communications
             - Port 3074 is used for Xbox Live and Windows games
             - Port 3389 is used by Microsoft for remote desktop connections
-            - Port 2128 is reserved by Net Steward Control _need more looking into_
+            - Port 2128 is reserved by Net Steward Control
         - For the `dst` ports:
             - Much of the same in the Top 10 of `src` ports appeared in this table, as expected.
             - Port 445 is used for direct TCP networking access, making it vulnerable to threats
             - Port 123 is used for time synchronization, also making it vulnerable to threats
-            - Port 2048 is reserved by a DLS-monitor _need more looking into_
+            - Port 2048 is reserved by a DLS-monitor
     - Explain any significant differences between the results for __sender vs. receiver__ port numbers.
         - As expected, there are similar `src` and `dst` ports used in the dataset
         - However, the major differences can be found in that the most commonly used `dst` ports are also most vulnerable to threats.
